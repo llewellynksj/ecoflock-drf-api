@@ -15,7 +15,7 @@ class Post(models.Model):
         ('Products', 'Products'),
         ('Transport', 'Transport'),
     ]
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    username = models.ForeignKey(User, on_delete=models.CASCADE)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length=255)
@@ -27,7 +27,7 @@ class Post(models.Model):
     image = models.ImageField(
         upload_to='images/', default='../EcoFlock/profile_default.png'
     )
-    url = models.URLField()
+    url = models.CharField(max_length=255)
     content = models.TextField()
 
     class Meta:

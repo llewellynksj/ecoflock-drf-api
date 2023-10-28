@@ -3,11 +3,11 @@ from .models import Post
 
 
 class PostSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source='author.username')
-    is_author = serializers.SerializerMethodField()
-    profile_id = serializers.ReadOnlyField(source='author.profile.id')
+    username = serializers.ReadOnlyField(source='username.username')
+    is_username = serializers.SerializerMethodField()
+    profile_id = serializers.ReadOnlyField(source='username.profile.id')
     profile_image = serializers.ReadOnlyField(
-        source='author.profile.profile_pic.url')
+        source='username.profile.profile_pic.url')
 
     def validate_image(self, value):
         if value.size > 1024 * 1024 * 2:
@@ -24,15 +24,15 @@ class PostSerializer(serializers.ModelSerializer):
             )
         return value
 
-    def get_is_author(self, obj):
+    def get_is_username(self, obj):
         request = self.context['request']
-        return request.user == obj.author
+        return request.user == obj.username
 
     class Meta:
         model = Post
         fields = [
             'id',
-            'author',
+            'username',
             'created_on',
             'updated_on',
             'title',
@@ -41,7 +41,7 @@ class PostSerializer(serializers.ModelSerializer):
             'image',
             'url',
             'content',
-            'is_author',
+            'is_username',
             'profile_id',
             'profile_image',
         ]
