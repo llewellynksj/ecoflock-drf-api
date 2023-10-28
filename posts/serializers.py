@@ -9,6 +9,21 @@ class PostSerializer(serializers.ModelSerializer):
     profile_image = serializers.ReadOnlyField(
         source='author.profile.profile_pic.url')
 
+    def validate_image(self, value):
+        if value.size > 1024 * 1024 * 2:
+            raise serializers.ValidationError(
+                'Error! Please upload an image below 2MB'
+            )
+        if value.image.width > 4096:
+            raise serializers.ValidationError(
+                'Error! Please upload an image with width below 4096px'
+            )
+        if value.image.height > 4096:
+            raise serializers.ValidationError(
+                'Error! Please upload an image with height below 4096px'
+            )
+        return value
+
     def get_is_author(self, obj):
         request = self.context['request']
         return request.user == obj.author
