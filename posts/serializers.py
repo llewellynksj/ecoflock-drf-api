@@ -42,4 +42,6 @@ class PostSerializer(serializers.ModelSerializer):
             'url',
             'content',
             'is_author',
+            'profile_id',
+            'profile_image',
         ]
