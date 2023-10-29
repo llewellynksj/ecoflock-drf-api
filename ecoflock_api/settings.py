@@ -64,7 +64,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '8000-llewellynks-ecoflockdrf-psazxsmakrz.ws-eu105.gitpod.io',
     'localhost',
-    'ecoflock_api.herokuapp.com',]
+    'ecoflock_api.herokuapp.com',
+    'ecoflock-api-0f1900f9e9bc.herokuapp.com',]
 
 
 # Application definition
