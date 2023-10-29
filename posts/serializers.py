@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Post
+from favourites.models import Favourite
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -8,6 +9,9 @@ class PostSerializer(serializers.ModelSerializer):
     profile_id = serializers.ReadOnlyField(source='username.profile.id')
     profile_image = serializers.ReadOnlyField(
         source='username.profile.profile_pic.url')
+    favourite_id = serializers.SerializerMethodField()
+    threads_count = serializers.ReadOnlyField()
+    favourites_count = serializers.ReadOnlyField()
 
     def validate_image(self, value):
         if value.size > 1024 * 1024 * 2:
@@ -28,6 +32,14 @@ class PostSerializer(serializers.ModelSerializer):
         request = self.context['request']
         return request.user == obj.username
 
+    def get_favourite_id(self, obj):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            favourite = Favourite.objects.filter(
+                username=user, post=obj).first()
+            return favourite.id if favourite else None
+        return None
+
     class Meta:
         model = Post
         fields = [
@@ -44,4 +56,7 @@ class PostSerializer(serializers.ModelSerializer):
             'is_username',
             'profile_id',
             'profile_image',
+            'favourite_id',
+            'threads_count',
+            'favourites_count',
         ]

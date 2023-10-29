@@ -1,4 +1,5 @@
-from rest_framework import generics, permissions
+from django.db.models import Count
+from rest_framework import generics, permissions, filters
 from ecoflock_api.permissions import IsOwnerOrReadOnly
 from .models import Post
 from .serializers import PostSerializer
@@ -11,7 +12,25 @@ class PostList(generics.ListCreateAPIView):
     """
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    queryset = Post.objects.all()
+    queryset = Post.objects.annotate(
+        threads_count=Count('username__thread', distinct=True),
+        favourites_count=Count('username__favourite', distinct=True),
+    ).order_by('-created_on')
+    filter_backends = [
+        filters.OrderingFilter,
+        filters.SearchFilter,
+    ]
+    search_fields = [
+        'username__username',
+        'title',
+        'topic_category',
+        'other_tags',
+    ]
+    ordering_fields = [
+        'threads_count',
+        'favourites_count',
+        'favourites__created_on',
+    ]
 
     def perform_create(self, serializer):
         serializer.save(username=self.request.user)
@@ -24,4 +43,7 @@ class PostDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     serializer_class = PostSerializer
     permission_classes = [IsOwnerOrReadOnly]
-    queryset = Post.objects.all()
+    queryset = Post.objects.annotate(
+        threads_count=Count('username__thread', distinct=True),
+        favourites_count=Count('username__favourite', distinct=True),
+    ).order_by('-created_on')
