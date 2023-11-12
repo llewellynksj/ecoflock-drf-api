@@ -95,6 +95,8 @@ INSTALLED_APPS = [
     'threads',
     'favourites',
     'followers',
+    'voting',
+    'events',
 ]
 
 SITE_ID = 1
