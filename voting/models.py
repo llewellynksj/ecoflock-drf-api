@@ -20,6 +20,12 @@ class UpVote(models.Model):
     blank=True)
   created_on = models.DateTimeField(auto_now_add=True)
 
+  class Meta:
+    ordering = ['-created_on']
+  
+  def __str__(self):
+    return f"Up-vote by {self.username}"
+
 
 class DownVote(models.Model):
   """
@@ -36,3 +42,9 @@ class DownVote(models.Model):
     on_delete=models.CASCADE,
     blank=True)
   created_on = models.DateTimeField(auto_now_add=True)
+
+  class Meta:
+    ordering = ['-created_on']
+  
+  def __str__(self):
+    return f"Down-vote by {self.username}"
